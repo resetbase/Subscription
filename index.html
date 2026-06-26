@@ -158,49 +158,55 @@
         .feature-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--text-dark); }
         .feature-desc { font-size: 13px; line-height: 1.7; color: #555; }
 
-        /* --- 料金プラン（最小化・すっきり版）スタイル --- */
+        /* --- 料金プラン（最小化リスト）CSSスタイル --- */
         .plan-section-title { text-align: center; margin-bottom: 32px; }
         .plan-en-title { font-family: var(--font-en); color: #a4baf3; font-size: 14px; font-weight: 600; display: block; margin-bottom: -2px; }
         .plan-jp-title { font-size: 26px; font-weight: 700; color: var(--plan-blue); position: relative; display: inline-block; z-index: 1; }
         .plan-jp-title::after { content: ""; position: absolute; bottom: 2px; left: -10%; width: 120%; height: 10px; background: #c1d2ff; z-index: -1; }
 
-        .compact-plan-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
-        .compact-plan-item {
-            border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;
-            background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            display: flex; flex-direction: column; gap: 12px; position: relative;
+        .plan-group-divider {
+            font-size: 13px; font-weight: 700; color: #64748b; margin: 32px 0 16px;
+            display: flex; align-items: center; gap: 8px; text-transform: uppercase;
         }
-        .compact-plan-item.hook-plan { border-left: 4px solid #94a3b8; } /* ライト・スタンダード */
-        .compact-plan-item.main-plan { border: 1.5px solid var(--plan-blue); background: #fdfeff; } /* メインプラン */
+        .plan-group-divider::after { content: ""; flex: 1; height: 1px; background: #e2e8f0; }
+
+        .compact-plan-list { display: flex; flex-direction: column; gap: 12px; }
+        .compact-plan-item {
+            border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px;
+            background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            display: flex; flex-direction: column; gap: 10px; position: relative;
+        }
+        .compact-plan-item.hook-plan { border-left: 4px solid #94a3b8; }
+        .compact-plan-item.main-plan { border: 1.5px solid var(--plan-blue); background: #fcfdfe; }
         
         .compact-plan-badge {
-            position: absolute; top: -10px; right: 12px; background: var(--plan-yellow);
-            color: #333; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: absolute; top: -9px; right: 12px; background: var(--plan-yellow);
+            color: #333; font-size: 10px; font-weight: 700; padding: 1px 8px; border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08); z-index: 2;
         }
         
         .compact-plan-info { display: flex; justify-content: space-between; align-items: center; }
-        .compact-plan-name { font-size: 16px; font-weight: 700; color: #111; }
+        .compact-plan-name { font-size: 15px; font-weight: 700; color: #111; }
         .compact-plan-price { font-family: var(--font-en); font-size: 18px; font-weight: 800; color: var(--plan-blue); }
         .compact-plan-price span { font-size: 11px; color: #666; font-weight: 500; font-family: var(--font-jp); margin-left: 2px; }
 
-        .compact-plan-actions { display: flex; gap: 10px; align-items: center; }
+        .compact-plan-actions { display: flex; gap: 8px; align-items: center; }
         .btn-compact-buy {
             flex: 1; text-align: center; padding: 10px; background: var(--plan-blue);
             color: #fff; font-size: 13px; font-weight: 700; border-radius: 6px; text-decoration: none;
-            box-shadow: 0 3px 8px rgba(43, 95, 232, 0.2); transition: 0.2s;
+            box-shadow: 0 3px 8px rgba(43, 95, 232, 0.15); transition: 0.2s;
         }
         .btn-compact-buy:hover { background: #1a49b8; }
-        .compact-plan-item.hook-plan .btn-compact-buy { background: #475569; box-shadow: 0 3px 8px rgba(71, 85, 105, 0.2); }
+        .compact-plan-item.hook-plan .btn-compact-buy { background: #475569; box-shadow: 0 3px 8px rgba(71, 85, 105, 0.15); }
 
         .btn-plan-detail-trigger {
-            background: none; border: 1px solid #cbd5e1; color: #475569;
+            background: #f8fafc; border: 1px solid #cbd5e1; color: #475569;
             font-size: 12px; font-weight: 600; padding: 9px 12px; border-radius: 6px;
             cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap;
         }
-        .btn-plan-detail-trigger:hover { background: #f8fafc; }
+        .btn-plan-detail-trigger:hover { background: #edeef2; }
 
-        /* モーダル表示用スタイル */
+        /* モーダル用CSS */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); z-index: 1000;
@@ -214,7 +220,7 @@
         }
         .modal-header { padding: 16px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
         .modal-header h3 { font-size: 15px; font-weight: 700; margin: 0; }
-        .modal-close { background: none; border: none; font-size: 24px; color: #999; cursor: pointer; }
+        .modal-close { background: none; border: none; font-size: 24px; color: #999; cursor: pointer; padding: 4px; line-height: 1; }
         .modal-body { padding: 0; overflow: hidden; flex: 1; }
         .table-scroll-wrap { width: 100%; height: 100%; overflow-x: auto; overflow-y: auto; -webkit-overflow-scrolling: touch; }
         
@@ -459,6 +465,8 @@
                             </div>
 
                             <div class="compact-plan-list">
+                                <div class="plan-group-divider">Step 1: まずは習慣化から（整体メイン）</div>
+
                                 <div class="compact-plan-item hook-plan">
                                     <div class="compact-plan-info">
                                         <div class="compact-plan-name">ライト</div>
@@ -481,6 +489,8 @@
                                         <a href="https://square.link/u/CkJbZbMg" class="btn-compact-buy" target="_blank">申し込む</a>
                                     </div>
                                 </div>
+
+                                <div class="plan-group-divider">Step 2: RESET BASE メインプラン</div>
 
                                 <div class="compact-plan-item main-plan">
                                     <div class="compact-plan-badge">おすすめ！</div>
@@ -719,7 +729,7 @@
     <div class="modal-overlay" id="compare-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>サブスクプラン詳細比較</h3>
+                <h3>サブスクプラン詳細比較表</h3>
                 <button class="modal-close" id="js-close-compare">&times;</button>
             </div>
             <div class="modal-body">
@@ -774,13 +784,13 @@
                                 <td>家族・社員共有・経営者向け</td>
                             </tr>
                             <tr>
-                                <td>特権・備考</td>
+                                <td>特権・備考（アンロック機能）</td>
                                 <td>基本サービス利用可能</td>
                                 <td>継続3ヶ月で限定サプリ進呈</td>
                                 <td>専門家単発相談メニューの全解放</td>
-                                <td>月間伴走サポート（管理栄養士等）の予約権</td>
-                                <td>土日優先予約枠・営業時間外対応の権利</td>
-                                <td>ポイント譲渡・共有権、専用コンシェルジュ付帯</td>
+                                <td>【特権】月間伴走サポート（管理栄養士等）の予約権</td>
+                                <td>【特権】土日優先予約枠・営業時間外対応の権利</td>
+                                <td>【特権】ポイント譲渡・共有権、専用コンシェルジュ付帯</td>
                             </tr>
                             <tr>
                                 <td>整体・ボディケア利用</td>
@@ -1043,7 +1053,7 @@
                 if (isMobile()) { document.querySelectorAll('.expert').forEach(exp => exp.classList.remove('active', 'out')); }
             });
 
-            // --- 全詳細ボタン、およびモーダル制御用コード ---
+            // --- 全詳細ボタン、およびモーダル制御用追加JavaScript ---
             const modalOpenBtns = document.querySelectorAll('.js-modal-open-btn');
             const btnCloseCompare = document.getElementById('js-close-compare');
             const compareModal = document.getElementById('compare-modal');
