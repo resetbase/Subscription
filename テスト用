@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RESET BASE | 専属チーム・サブスクリプション</title>
+    <link href="https://fonts.googleapis.com/css?display=swap&family=Lato:300,400,700,900|Open+Sans:400,600,700,800|Noto+Sans+JP:300,400,500,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --font-jp: 'Noto Sans JP', sans-serif;
+            --font-en: 'Lato', 'Open Sans', sans-serif;
+            --primary-bg: #2b65f1;
+            --text-dark: #333333;
+            --phone-width: 440px;
+            --phone-height: 85vh;
+            --plan-blue: #2b5fe8; 
+            --plan-yellow: #fcd34d; 
+            --partner-gray: #f8f9fa;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            background-color: var(--primary-bg);
+            background-image: radial-gradient(rgba(255, 255, 255, 0.15) 2px, transparent 2px);
+            background-size: 10px 10px;
+            font-family: var(--font-jp);
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bg-watermark {
+            position: absolute; bottom: -20px; left: 0; width: 100%;
+            overflow: hidden; z-index: 0; pointer-events: none;
+        }
+        .marquee-content { display: flex; width: fit-content; animation: marquee 30s linear infinite; }
+        .marquee-content span {
+            font-size: clamp(80px, 12vw, 150px); font-weight: 900;
+            color: rgba(255, 255, 255, 0.08); font-family: var(--font-en);
+            font-style: italic; white-space: nowrap; padding-right: 20px;
+        }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        .top-left-logo { position: absolute; top: 40px; left: 5vw; z-index: 30; color: #fff; }
+        .top-left-logo h1 { font-family: var(--font-en); font-size: 40px; font-style: italic; font-weight: 900; line-height: 1; letter-spacing: -0.02em; }
+        .top-left-logo p { font-family: var(--font-jp); font-size: 10px; margin-top: 4px; letter-spacing: 0.1em; padding-left: 2px; font-weight: 400; }
+
+        .layout-wrapper { display: flex; width: 100%; height: 100%; position: relative; z-index: 10; }
+        
+        .desktop-sidebar { width: 30%; min-width: 250px; display: flex; flex-direction: column; justify-content: center; padding-left: 6vw; z-index: 20; }
+        .desktop-nav ul { list-style: none; margin-bottom: 40px; transition: opacity 0.3s; }
+        .desktop-nav li { margin-bottom: 24px; }
+        .desktop-nav a.nav-link {
+            display: inline-flex; align-items: center; color: #fff; text-decoration: none; font-size: 18px; font-weight: 700;
+            position: relative; transition: all 0.3s ease; letter-spacing: 0.05em;
+        }
+        .desktop-nav a.nav-link::before {
+            content: ""; display: inline-block; width: 3px; height: 18px;
+            background: rgba(255, 255, 255, 0.4); margin-right: 12px; border-radius: 2px; transition: all 0.3s ease;
+        }
+        .desktop-nav li.active a.nav-link::before { background: #fff; height: 20px; }
+        .desktop-nav li.active a.nav-link { opacity: 1; }
+        .desktop-nav li:not(.active) a.nav-link { opacity: 0.8; }
+
+        .btn-sidebar-partner {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 14px 28px; border: 2px solid #fff; border-radius: 8px;
+            color: var(--primary-bg); background: #fff; text-decoration: none; font-size: 15px; font-weight: 800;
+            transition: all 0.3s ease; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .btn-sidebar-partner.active { background: var(--plan-yellow); border-color: var(--plan-yellow); color: #333; }
+        .btn-sidebar-partner:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+        .btn-sidebar-partner i { font-size: 18px; color: var(--plan-yellow); }
+        .btn-sidebar-partner.active i { color: #333; }
+
+        .preview-area { width: 70%; }
+        .phone-container-wrapper { position: absolute; top: 50%; left: 50%; width: var(--phone-width); height: var(--phone-height); max-height: 95vh; transform: translate(-50%, -50%); z-index: 10; }
+
+        .phone-mockup {
+            position: relative; z-index: 10; width: 100%; height: 100%;
+            background: #fff; border-radius: 40px; box-shadow: 0 30px 60px rgba(0,0,0,0.3); overflow-y: auto; overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+        .phone-mockup::-webkit-scrollbar { width: 0; }
+
+        .experts-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        .expert { position: absolute; display: flex; align-items: center; justify-content: center; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease; opacity: 0; transform: translate(0, 0) scale(0.5); width: 280px; pointer-events: none; }
+        .expert.active.out { opacity: 0; transform: scale(0.5) !important; transition: all 0.4s ease-out !important; }
+        .expert img { width: 100%; height: auto; object-fit: contain; -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 95%); mask-image: linear-gradient(to bottom, black 70%, transparent 95%); }
+        .expert.right { top: 40%; right: 10px; transform-origin: bottom left; }
+        .expert.right.active { opacity: 1; transform: translate(60%, -10%) scale(1.1) rotate(25deg); }
+        .expert.left { top: 15%; left: 10px; transform-origin: bottom right; }
+        .expert.left.active { opacity: 1; transform: translate(-60%, -10%) scale(1.1) rotate(-25deg); }
+
+        /* --- ヘッダー・共通 --- */
+        .lp-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 20px; background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100;
+        }
+        .lp-logo { color: var(--primary-bg); font-size: 26px; font-weight: 900; font-family: var(--font-en); font-style: italic; line-height: 1; letter-spacing: -0.02em; }
+        .lp-logo span { display: block; font-size: 10px; font-style: normal; font-weight: 600; color: #666; letter-spacing: 0.02em; margin-top: 4px; }
+        
+        .header-actions { display: flex; align-items: center; gap: 12px; }
+        .btn-sm-line {
+            display: inline-flex; align-items: center; gap: 6px; background: #06C755; color: #fff; text-decoration: none;
+            font-size: 13px; font-weight: 700; padding: 10px 18px; border-radius: 24px; box-shadow: 0 4px 10px rgba(6, 199, 85, 0.3); transition: transform 0.2s;
+        }
+        .btn-sm-line i { font-size: 16px; }
+
+        .hamburger-btn { display: none; background: none; border: none; flex-direction: column; gap: 6px; cursor: pointer; z-index: 110; padding: 4px; }
+        .hamburger-btn span { display: block; width: 24px; height: 2px; background: var(--primary-bg); transition: 0.3s; border-radius: 2px; }
+        .hamburger-btn.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .hamburger-btn.open span:nth-child(2) { opacity: 0; }
+        .hamburger-btn.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+        .mobile-menu {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.98); z-index: 105;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .mobile-menu.open { opacity: 1; pointer-events: auto; }
+        .mobile-nav-list { list-style: none; text-align: center; }
+        .mobile-nav-list li { margin-bottom: 24px; }
+        .mobile-nav-list a { font-size: 18px; font-weight: 700; color: var(--text-dark); text-decoration: none; letter-spacing: 0.05em; }
+
+        /* --- メインLP（B2C） --- */
+        #view-main { position: relative; width: 100%; }
+        .hero { position: relative; height: 480px; overflow: hidden; background: #fff; width: 100%; }
+        .hero-slider { position: absolute; inset: 0; z-index: 1; width: 100%; }
+        .hero-slider .slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.5s ease-in-out; width: 100%; }
+        .hero-slider .slide.active { opacity: 1; }
+        .hero::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,0.2); z-index: 2; }
+        .wave-top { position: absolute; top: -1px; left: 0; width: 100%; height: 50px; z-index: 3; }
+        .wave-bottom { position: absolute; bottom: -1px; left: 0; width: 100%; height: 50px; z-index: 3; }
+        .wave-top svg, .wave-bottom svg { width: 100%; height: 100%; display: block; fill: #fff; }
+        .hero-content { position: absolute; top: 12%; right: 20px; z-index: 4; display: flex; flex-direction: row-reverse; gap: 12px; align-items: flex-start; }
+        .vertical-catch { writing-mode: vertical-rl; color: #fff; padding: 24px 10px; font-size: 15px; font-weight: 700; letter-spacing: 0.2em; white-space: nowrap; box-shadow: 0 10px 25px rgba(0,0,0,0.2); text-align: center; }
+        .vertical-catch.accent-box { background-color: #1a49b8; margin-top: 0px; }
+        .vertical-catch.main-box { background-color: var(--primary-bg); margin-top: 60px; }
+
+        .section { padding: 60px 20px; background: #fff; border-bottom: 1px solid #f0f0f0; }
+        .bg-light { background-color: #f9fafb; }
+        .sec-title-wrap { text-align: center; margin-bottom: 32px; }
+        .sec-en { font-family: var(--font-en); color: #8ba5ec; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 4px; }
+        .sec-jp { font-size: 24px; font-weight: 700; color: var(--text-dark); line-height: 1.4; position: relative; display: inline-block; }
+        
+        .concept-text { font-size: 14px; line-height: 1.8; color: #444; text-align: justify; margin-bottom: 24px; }
+        .concept-highlight { color: var(--primary-bg); font-weight: 700; font-size: 16px; display: block; margin: 16px 0; text-align: center;}
+        
+        .feature-card { background: #fff; border-radius: 12px; overflow: hidden; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .feature-img { width: 100%; height: 180px; object-fit: cover; }
+        .feature-body { padding: 20px; }
+        .feature-num { font-family: var(--font-en); font-size: 28px; font-weight: 900; color: var(--primary-bg); opacity: 0.3; line-height: 1; margin-bottom: -10px; }
+        .feature-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--text-dark); }
+        .feature-desc { font-size: 13px; line-height: 1.7; color: #555; }
+
+        /* --- 料金プラン用スタイル更新 --- */
+        .plan-section-title { text-align: center; margin-bottom: 40px; }
+        .plan-en-title { font-family: var(--font-en); color: #a4baf3; font-size: 14px; font-weight: 600; display: block; margin-bottom: -2px; text-transform: uppercase; letter-spacing: 0.1em; }
+        .plan-jp-title { font-size: 26px; font-weight: 700; color: var(--plan-blue); position: relative; display: inline-block; z-index: 1; }
+        .plan-jp-title::after { content: ""; position: absolute; bottom: 2px; left: -10%; width: 120%; height: 10px; background: #c1d2ff; z-index: -1; }
+
+        .plan-group-title {
+            font-size: 16px; font-weight: 700; color: #111; margin: 40px 0 20px; text-align: center;
+            padding-bottom: 12px; border-bottom: 2px dashed #ccc;
+        }
+        .plan-group-title span {
+            display: block; font-family: var(--font-en); font-size: 12px; color: var(--primary-bg); letter-spacing: 0.1em; margin-bottom: 4px;
+        }
+        .plan-group-title.main-group span { color: #f59e0b; }
+
+        .img-plan-card { border: 2px solid #eaeaea; background: #fff; position: relative; margin-bottom: 32px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .img-plan-card.highlight { border-color: var(--plan-blue); box-shadow: 0 8px 25px rgba(43, 95, 232, 0.15); }
+        .img-plan-badge { position: absolute; top: -1px; right: -1px; background: var(--plan-yellow); color: #333; font-weight: 700; font-size: 11px; padding: 6px 12px; border-bottom-left-radius: 8px; z-index: 2; box-shadow: -2px 2px 5px rgba(0,0,0,0.1); }
+        .img-plan-header { background-color: #f8f9fa; padding: 20px 16px; text-align: center; border-bottom: 1px solid #eaeaea; }
+        .img-plan-card.highlight .img-plan-header { background-color: var(--plan-blue); background-image: radial-gradient(rgba(255, 255, 255, 0.15) 2px, transparent 2px); background-size: 10px 10px; color: #fff; }
+        .img-plan-en { font-size: 11px; font-family: var(--font-en); margin-bottom: 4px; letter-spacing: 0.05em; color: #666; }
+        .img-plan-card.highlight .img-plan-en { color: rgba(255,255,255,0.8); }
+        .img-plan-jp { font-size: 20px; font-weight: 700; color: #111; }
+        .img-plan-card.highlight .img-plan-jp { color: #fff; }
+        
+        .img-plan-body { padding: 24px 20px; text-align: center; }
+        .img-plan-price-box { display: inline-flex; align-items: baseline; position: relative; margin-bottom: 8px; z-index: 1; }
+        .img-plan-price-box .yen { font-size: 14px; color: var(--text-dark); font-weight: 700; margin-right: 2px; }
+        .img-plan-price-box .num { font-size: 40px; color: var(--text-dark); font-family: var(--font-en); font-style: italic; font-weight: 800; line-height: 1; letter-spacing: -0.02em;}
+        .img-plan-price-box .month { font-size: 12px; color: #666; font-weight: 500; margin-left: 2px; }
+        .img-plan-card.highlight .img-plan-price-box .num, .img-plan-card.highlight .img-plan-price-box .yen { color: var(--plan-blue); }
+        .img-plan-card.highlight .img-plan-price-box::after { content: ""; position: absolute; bottom: 4px; left: 0; width: 100%; height: 6px; background: var(--plan-yellow); z-index: -1; opacity: 0.6; }
+
+        .plan-point-info { font-size: 13px; color: #555; background: #f0f4ff; display: inline-block; padding: 6px 12px; border-radius: 20px; margin-bottom: 20px; }
+        .plan-point-info strong { color: var(--plan-blue); font-size: 15px; }
+
+        .img-plan-hr { border: none; border-top: 1px dashed #ddd; margin: 0 0 20px 0; }
+        .img-plan-row { display: flex; align-items: flex-start; margin-bottom: 12px; text-align: left; }
+        .img-plan-label { background: #eee; color: #555; font-size: 11px; font-weight: 700; padding: 4px 0; width: 50px; text-align: center; flex-shrink: 0; margin-right: 12px; border-radius: 4px;}
+        .img-plan-card.highlight .img-plan-label { background: var(--plan-blue); color: #fff; }
+        .img-plan-desc { font-size: 13px; color: #333; line-height: 1.5; font-weight: 500; margin-top: 2px;}
+
+        .btn-plan-buy {
+            display: block; width: 100%; text-align: center; padding: 14px; margin-top: 24px;
+            background: #fff; border: 2px solid var(--plan-blue); color: var(--plan-blue);
+            font-size: 14px; font-weight: 700; border-radius: 8px; text-decoration: none; transition: 0.3s;
+        }
+        .img-plan-card.highlight .btn-plan-buy { background: var(--plan-blue); color: #fff; box-shadow: 0 4px 10px rgba(43, 95, 232, 0.3); }
+
+        .btn-compare-trigger {
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            background: #333; color: #fff; padding: 16px; border-radius: 8px; text-decoration: none;
+            font-weight: 700; font-size: 15px; margin-top: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            cursor: pointer; border: none; width: 100%;
+        }
+        .btn-compare-trigger i { color: var(--plan-yellow); }
+
+        /* モーダル用CSS */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1000;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .modal-overlay.show { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background: #fff; width: 95%; max-width: 900px; max-height: 85vh;
+            border-radius: 12px; position: relative; display: flex; flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .modal-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h3 { font-size: 16px; font-weight: 700; color: #111; margin: 0; }
+        .modal-close { background: none; border: none; font-size: 24px; color: #999; cursor: pointer; line-height: 1; }
+        .modal-body { padding: 0; overflow: hidden; flex: 1; }
+        .table-scroll-wrap {
+            width: 100%; height: 100%; overflow-x: auto; overflow-y: auto;
+            -webkit-overflow-scrolling: touch; padding: 0;
+        }
+        .compare-table { width: max-content; min-width: 100%; border-collapse: collapse; font-size: 12px; }
+        .compare-table th, .compare-table td { padding: 12px 16px; border: 1px solid #eee; text-align: center; }
+        .compare-table th { background: var(--plan-blue); color: #fff; font-weight: 700; position: sticky; top: 0; z-index: 1; white-space: nowrap; }
+        /* 左端の項目名を固定 */
+        .compare-table th:first-child, .compare-table td:first-child {
+            position: sticky; left: 0; background: #f8f9fa; color: #333; font-weight: 700;
+            text-align: left; z-index: 2; border-right: 2px solid #ddd; white-space: nowrap;
+        }
+        .compare-table th:first-child { z-index: 3; background: #1a49b8; color: #fff; }
+        .compare-table td .circle { color: var(--plan-blue); font-weight: 900; font-size: 16px; }
+        .compare-table td .dash { color: #ccc; }
+
+        .faq-item { border: 1px solid #eee; border-radius: 6px; margin-bottom: 12px; }
+        .faq-q { background: #f9f9f9; padding: 14px 16px; font-weight: 700; font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .faq-q::after { content: '＋'; font-size: 12px; color: var(--primary-bg); }
+        .faq-a { padding: 14px 16px; font-size: 13px; line-height: 1.6; color: #555; border-top: 1px solid #eee; display: none; background: #fff; }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-q::after { content: 'ー'; }
+
+        .maps-btn { display: flex; justify-content: center; align-items: center; background: var(--primary-bg); color: #fff; text-decoration: none; padding: 12px; border-radius: 6px; font-weight: 700; font-size: 14px; margin-top: 16px; }
+
+        .line-section { background: #f4f7fc; padding: 60px 20px; text-align: center; }
+        .line-wrap { border: 2px solid #06C755; border-radius: 12px; padding: 40px 24px; background: #fff; box-shadow: 0 10px 30px rgba(6,199,85,0.08); }
+        .line-title { font-size: 18px; font-weight: 700; color: var(--text-dark); margin-bottom: 24px; line-height: 1.5; }
+        .qr-code { width: 140px; height: 140px; margin: 0 auto 24px; }
+        .qr-code img { width: 100%; height: 100%; display: block; }
+        .line-btn-large { display: flex; align-items: center; justify-content: center; background: #06C755; color: #fff; font-size: 16px; font-weight: 700; padding: 18px; border-radius: 8px; text-decoration: none; box-shadow: 0 6px 15px rgba(6, 199, 85, 0.3); }
+        
+        .footer { background-color: var(--primary-bg); background-image: radial-gradient(rgba(255, 255, 255, 0.15) 2px, transparent 2px); background-size: 10px 10px; padding: 50px 24px 30px; text-align: center; color: #fff; width: 100%; }
+        .footer-logo { font-size: 32px; font-weight: 900; font-family: var(--font-en); font-style: italic; margin-bottom: 4px; line-height: 1; }
+        .footer-sub { font-size: 10px; font-weight: 400; letter-spacing: 0.1em; margin-bottom: 32px; opacity: 0.9; }
+        .footer-sns { display: flex; justify-content: center; gap: 24px; margin-bottom: 32px; }
+        .footer-sns a { color: #fff; font-size: 28px; text-decoration: none; transition: opacity 0.3s; }
+        .footer-links { display: flex; justify-content: center; gap: 16px; font-size: 11px; margin-bottom: 24px; flex-wrap: wrap; }
+        .footer-links a { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+        .footer-copy { font-size: 11px; opacity: 0.9; font-weight: 400; }
+
+        /* パートナーCSS等は省略せず既存のまま維持 */
+        #view-partner { display: none; background-color: #fff; position: relative; width: 100%; } 
+        /* ...中略 (元のパートナーCSS) ... */
+
+        @media (max-width: 768px) {
+            html, body { height: auto; overflow: auto; background-color: #fff; background-image: none; }
+            .hamburger-btn { display: flex; }
+            .layout-wrapper { display: block; height: auto; }
+            .desktop-sidebar, .top-left-logo, .bg-watermark, .experts-layer { display: none !important; }
+            .preview-area { width: 100%; height: auto; }
+            .phone-container-wrapper { position: relative; top: 0; left: 0; width: 100%; height: auto; transform: none; max-height: none; }
+            .phone-mockup { border: none; border-radius: 0; box-shadow: none; height: auto; overflow: visible; }
+            .lp-header, .p-header { position: sticky; top: 0; z-index: 100; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-watermark">
+        <div class="marquee-content">
+            <span>RESET BASE RESET BASE RESET BASE</span>
+        </div>
+    </div>
+    <div class="top-left-logo">
+        <h1>RESET<span>BASE</span></h1>
+        <p>すべての人に、専属チームを</p>
+    </div>
+
+    <div class="layout-wrapper">
+        <aside class="desktop-sidebar">
+            <nav class="desktop-nav">
+                <ul id="main-nav-ul">
+                    <li class="active"><a href="#about" class="nav-link">RESET BASEとは</a></li>
+                    <li><a href="#feature" class="nav-link">特徴</a></li>
+                    <li><a href="#plan" class="nav-link">料金プラン</a></li>
+                    <li><a href="#faq" class="nav-link">よくあるご質問</a></li>
+                    <li><a href="#access" class="nav-link">アクセス</a></li>
+                    <li><a href="#contact" class="nav-link">お問い合わせ</a></li>
+                </ul>
+                <a href="#" id="btn-show-partner" class="btn-sidebar-partner">
+                    <i class="fa-solid fa-handshake"></i> パートナー募集
+                </a>
+            </nav>
+        </aside>
+
+        <main class="preview-area">
+            <div class="phone-container-wrapper">
+                <div class="phone-mockup" id="phone-mockup-scroll">
+                    
+                    <div class="mobile-menu" id="js-mobile-menu">
+                        <ul class="mobile-nav-list">
+                            <li><a href="#about" class="m-nav-link">RESET BASEとは</a></li>
+                            <li><a href="#feature" class="m-nav-link">特徴</a></li>
+                            <li><a href="#plan" class="m-nav-link">料金プラン</a></li>
+                            <li><a href="#faq" class="m-nav-link">よくあるご質問</a></li>
+                            <li><a href="#access" class="m-nav-link">アクセス</a></li>
+                            <li><a href="#contact" class="m-nav-link">お問い合わせ</a></li>
+                        </ul>
+                        <a href="#" id="m-btn-show-partner" class="btn-sidebar-partner" style="margin-top: 24px; border-color: var(--primary-bg);">
+                            <i class="fa-solid fa-handshake"></i> パートナー募集
+                        </a>
+                    </div>
+
+                    <div id="view-main">
+                        <header class="lp-header">
+                            <div class="lp-logo">RESET BASE<span>すべての人に、専属チームを</span></div>
+                            <div class="header-actions">
+                                <a href="#contact" class="btn-sm-line"><i class="fa-brands fa-line"></i>LINE相談</a>
+                                <button class="hamburger-btn" id="js-hamburger"><span></span><span></span><span></span></button>
+                            </div>
+                        </header>
+
+                        <section class="section" id="plan">
+                            <div class="plan-section-title">
+                                <span class="plan-en-title">Subscription Plans</span>
+                                <h2 class="plan-jp-title">料金プラン</h2>
+                            </div>
+
+                            <h3 class="plan-group-title"><span>Step 1</span>まずは習慣化から（整体メイン）</h3>
+
+                            <div class="img-plan-card">
+                                <div class="img-plan-header">
+                                    <div class="img-plan-en">Light Plan</div>
+                                    <div class="img-plan-jp">ライト</div>
+                                </div>
+                                <div class="img-plan-body">
+                                    <div class="img-plan-price-box">
+                                        <span class="yen">¥</span><span class="num">6,600</span><span class="month">/月(税込)</span>
+                                    </div>
+                                    <div class="plan-point-info">毎月 <strong>30pt</strong> 付与 (単価100円)</div>
+                                    <hr class="img-plan-hr">
+                                    <div class="img-plan-row">
+                                        <div class="img-plan-label">対象</div>
+                                        <div class="img-plan-desc">月2回の30分メンテ</div>
+                                    </div>
+                                    <div class="img-plan-row">
+                                        <div class="img-plan-label">特権</div>
+                                        <div class="img-plan-desc">基本サービス利用可能</div>
+                                    </div>
+                                    <a href="https://square.link/u/nSGGJbPy" class="btn-plan-buy" target="_blank">このプランを選択する</a>
+                                </div>
+                            </div>
+
+                            <div class="img-plan-card">
+                                <div class="img-plan-header">
+                                    <div class="img-plan-en">Standard Plan</div>
+                                    <div class="img-plan-jp">スタンダード</div>
+                                </div>
+                                <div class="img-plan-body">
+                                    <div class="img-plan-price-box">
+                                        <span class="yen">¥</span><span class="num">13,200</span><span class="month">/月(税込)</span>
+                                    </div>
+                                    <div class="plan-point-info">毎月 <strong>60pt</strong> 付与 (単価100円)</div>
+                                    <hr class="img-plan-hr">
+                                    <div class="img-plan-row">
+                                        <div class="img-plan-label">対象</div>
+                                        <div class="img-plan-desc">月2回の整体・基本習慣化</div>
+                                    </div>
+                                    <div class="img-plan-row">
+                                        <div class="img-plan-label">特権</div>
+                                        <div class="img-plan-desc">継続3ヶ月で限定サプリ進呈</div>
+                                    </div>
+                                    <a href="https://square.link/u/CkJbZbMg" class="btn-plan-buy" target="_blank">このプランを選択する</a>
+                                </div>
+                            </div>
+
+                            <h3 class="plan-group-title main-group"><span>Step 2</span>あなただけの専属チームを結成</h3>
+
+                            <div class="img-plan-card highlight">
+                                <div class="img-plan-badge">一番人気・専門家相談解放</div>
+                                <div class="img-plan-header">
+                                    <div class="img-plan-en">Premium Plan</div>
+                                    <div class="img-plan-jp">プレミアム</div>
+                                </div>
+                                <div class="img-plan-body">
+                                    <div class="img-plan-price-box">
+                                        <span class="yen">¥</span><span class="num">22,000</span><span class="month">/月(税込)</span>
+                                    </div>
+                                    <div class="plan-point-info">毎月 <strong>115pt</strong> 付与 (単価97.7円)</div>
+                                    <hr class="img-plan-hr">
+                                    <div class="img-plan-row">
+                                        <div class="img-plan-label">対象</div>
+                                        <div class="img-plan-desc">週1回の整体・専門家相談</div>
+                                    </div>
+                                    <div class="img-plan-row">
+                                        <div class="img-plan-label">特権</div>
+                                        <div class="img-plan-desc">専門家単発相談メニュー全解放</div>
+                                    </div>
+                                    <a href="https://square.link/u/tQImQzYW" class="btn-plan-buy" target="_blank">このプランを選択する</a>
+                                </div>
+                            </div>
+
+                            <div class="img-plan-card highlight">
+                                <div class="img-plan-header">
+                                    <div class="img-plan-en">Expert Support Plan</div>
+                                    <div class="img-plan-jp">エキスパート伴走プラン</div>
+                                </div>
+                                <div class="img-plan-body">
+                                    <div class="img-plan-price-box">
+                                        <span class="yen">¥</span><span class="num">33,000</span><span class="month">/月(税込)</span>
+                                    </div>
+                                    <div class="plan-point-info">毎月 <strong>170pt</strong> 付与 (単価97.0円)</div>
+                                    <hr class="img-plan-hr">
+                                    <div class="img-plan-row">
+                                        <div class="img-plan-label">対象</div>
+                                        <div class="img-plan-desc">身体の根本改善・伴走希望者</div>
+                                    </div>
+                                    <div class="img-plan-row">
+                                        <div class="img-plan-label">特権</div>
+                                        <div class="img-plan-desc">月間伴走サポート（管理栄養士等）の予約権</div>
+                                    </div>
+                                    <a href="https://square.link/u/1PTExaa2" class="btn-plan-buy" target="_blank">このプランを選択する</a>
+                                </div>
+                            </div>
+
+                            <div class="img-plan-card highlight">
+                                <div class="img-plan-header">
+                                    <div class="img-plan-en">Total Care VIP</div>
+                                    <div class="img-plan-jp">トータルケアVIP</div>
+                                </div>
+                                <div class="img-plan-body">
+                                    <div class="img-plan-price-box">
+                                        <span class="yen">¥</span><span class="num">55,000</span><span class="month">/月(税込)</span>
+                                    </div>
+                                    <div class="plan-point-info">毎月 <strong>285pt</strong> 付与 (単価96.4円)</div>
+                                    <hr class="img-plan-hr">
+                                    <div class="img-plan-row">
+                                        <div class="img-plan-label">対象</div>
+                                        <div class="img-plan-desc">徹底的な身体改革・多忙な方</div>
+                                    </div>
+                                    <div class="img-plan-row">
+                                        <div class="img-plan-label">特権</div>
+                                        <div class="img-plan-desc">土日優先予約枠・営業時間外対応の権利</div>
+                                    </div>
+                                    <a href="https://square.link/u/KoqDEs10" class="btn-plan-buy" target="_blank">このプランを選択する</a>
+                                </div>
+                            </div>
+
+                            <div class="img-plan-card">
+                                <div class="img-plan-header" style="background-color: #333; color: #fff;">
+                                    <div class="img-plan-en" style="color:#aaa;">Platinum Family</div>
+                                    <div class="img-plan-jp" style="color:#fff;">プラチナ・ファミリー</div>
+                                </div>
+                                <div class="img-plan-body">
+                                    <div class="img-plan-price-box">
+                                        <span class="yen">¥</span><span class="num">110,000</span><span class="month">/月(税込)</span>
+                                    </div>
+                                    <div class="plan-point-info">毎月 <strong>575pt</strong> 付与 (単価95.6円)</div>
+                                    <hr class="img-plan-hr">
+                                    <div class="img-plan-row">
+                                        <div class="img-plan-label">対象</div>
+                                        <div class="img-plan-desc">家族・社員共有・経営者向け</div>
+                                    </div>
+                                    <div class="img-plan-row">
+                                        <div class="img-plan-label">特権</div>
+                                        <div class="img-plan-desc">ポイント譲渡/共有権、専用コンシェルジュ付帯</div>
+                                    </div>
+                                    <a href="https://square.link/u/MrAgxAcG" class="btn-plan-buy" style="border-color:#333; color:#333;" target="_blank">このプランを選択する</a>
+                                </div>
+                            </div>
+
+                            <button id="js-open-compare" class="btn-compare-trigger">
+                                <i class="fa-solid fa-table-list"></i> プラン詳細比較表を見る
+                            </button>
+
+                        </section>
+
+                        </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="compare-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>プラン比較表</h3>
+                <button class="modal-close" id="js-close-compare">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="table-scroll-wrap">
+                    <table class="compare-table">
+                        <thead>
+                            <tr>
+                                <th>サービス項目 / プラン</th>
+                                <th>ライト</th>
+                                <th>スタンダード</th>
+                                <th>プレミアム</th>
+                                <th>エキスパート伴走</th>
+                                <th>トータルケアVIP</th>
+                                <th>プラチナ・ファミリー</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>月額料金(税込)</td>
+                                <td>6,600円</td>
+                                <td>13,200円</td>
+                                <td>22,000円</td>
+                                <td>33,000円</td>
+                                <td>55,000円</td>
+                                <td>110,000円</td>
+                            </tr>
+                            <tr>
+                                <td>整体・ボディケア利用</td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                            </tr>
+                            <tr>
+                                <td>イベント・ワークショップ参加</td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                            </tr>
+                            <tr>
+                                <td>物販(サプリ・ツール等)購入</td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                            </tr>
+                            <tr>
+                                <td>継続3ヶ月特典(ギフト進呈)</td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                            </tr>
+                            <tr>
+                                <td>専門家相談:単発メニュー解放</td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                            </tr>
+                            <tr>
+                                <td>専門家相談:月間伴走サポート</td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                            </tr>
+                            <tr>
+                                <td>土日優先予約・時間外対応</td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="circle">〇</span></td>
+                                <td><span class="circle">〇</span></td>
+                            </tr>
+                            <tr>
+                                <td>ポイント譲渡・社員共有権</td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="circle">〇</span></td>
+                            </tr>
+                            <tr>
+                                <td>専用コンシェルジュ窓口</td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="dash">-</span></td>
+                                <td><span class="circle">〇</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // ... 既存のJSスクリプト部分は維持 ...
+            
+            // --- 追加：比較表モーダルの制御 ---
+            const btnOpenCompare = document.getElementById('js-open-compare');
+            const btnCloseCompare = document.getElementById('js-close-compare');
+            const compareModal = document.getElementById('compare-modal');
+
+            if(btnOpenCompare && compareModal) {
+                btnOpenCompare.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    compareModal.classList.add('show');
+                });
+                btnCloseCompare.addEventListener('click', () => {
+                    compareModal.classList.remove('show');
+                });
+                // 背景タップで閉じる
+                compareModal.addEventListener('click', (e) => {
+                    if(e.target === compareModal) {
+                        compareModal.classList.remove('show');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
