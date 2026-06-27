@@ -51,18 +51,18 @@
         
         .desktop-sidebar { width: 30%; min-width: 250px; display: flex; flex-direction: column; justify-content: center; padding-left: 6vw; z-index: 20; }
         .desktop-nav ul { list-style: none; margin-bottom: 40px; transition: opacity 0.3s; }
-        .desktop-nav li { margin-bottom: 24px; }
+.desktop-nav li { margin-bottom: 16px; }
         .desktop-nav a.nav-link {
-            display: inline-flex; align-items: center; color: #fff; text-decoration: none; font-size: 18px; font-weight: 700;
+            display: inline-flex; align-items: center; color: #fff; text-decoration: none; font-size: 20px; font-weight: 700;
             position: relative; transition: all 0.3s ease; letter-spacing: 0.05em;
         }
         .desktop-nav a.nav-link::before {
-            content: ""; display: inline-block; width: 3px; height: 18px;
-            background: rgba(255, 255, 255, 0.4); margin-right: 12px; border-radius: 2px; transition: all 0.3s ease;
+            content: ""; display: inline-block; width: 4px; height: 22px;
+            background: rgba(255, 255, 255, 0.4); margin-right: 14px; border-radius: 2px; transition: all 0.3s ease;
         }
-        .desktop-nav li.active a.nav-link::before { background: #fff; height: 20px; }
-        .desktop-nav li.active a.nav-link { opacity: 1; }
-        .desktop-nav li:not(.active) a.nav-link { opacity: 0.8; }
+        .desktop-nav li.active a.nav-link { color: var(--plan-yellow); opacity: 1; }
+        .desktop-nav li.active a.nav-link::before { background: var(--plan-yellow); height: 26px; }
+        .desktop-nav li:not(.active) a.nav-link { opacity: 0.7; }
 
         .btn-sidebar-partner {
             display: inline-flex; align-items: center; gap: 10px;
