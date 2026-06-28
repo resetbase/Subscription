@@ -143,11 +143,11 @@
 　　　　.vertical-catch.main-box { background-color: var(--primary-bg); margin-top: 60px; }
 
 /* --- スクロールインジケーター --- */
-        .scroll-indicator { position: absolute; bottom: -65px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; flex-direction: column; align-items: center; }
-        .scroll-text { color: #fff; font-size: 10px; font-family: var(--font-en); letter-spacing: 0.1em; margin-bottom: 6px; text-transform: uppercase; opacity: 0.8; text-shadow: 0 2px 4px rgba(0,0,0,0.6); }
-        .scroll-line { width: 2px; height: 85px; background: linear-gradient(to bottom, rgba(255,255,255,0.6) 20%, rgba(0,0,0,0.15) 100%); position: relative; overflow: hidden; }
-        .scroll-line::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 40%; background: var(--text-dark); animation: scrollDownAnim 2s cubic-bezier(0.77, 0, 0.175, 1) infinite; }
-        @keyframes scrollDownAnim { 0% { transform: translateY(-100%); } 100% { transform: translateY(300%); } }
+        .scroll-indicator { position: absolute; bottom: 0px; left: 50%; transform: translate(-50%, 40%); z-index: 10; display: flex; flex-direction: column; align-items: center; pointer-events: none; }
+        .scroll-text { color: #fff; font-size: 10px; font-family: var(--font-en); letter-spacing: 0.1em; margin-bottom: 6px; text-transform: uppercase; opacity: 0.9; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .scroll-line { width: 2px; height: 110px; background: linear-gradient(to bottom, #ffffff 0%, #ffffff 35%, var(--text-dark) 35%, var(--text-dark) 100%); position: relative; overflow: hidden; box-shadow: 0 0 4px rgba(0,0,0,0.1); }
+        .scroll-line::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 30%; background: var(--plan-yellow); animation: scrollDownAnim 2s cubic-bezier(0.77, 0, 0.175, 1) infinite; }
+        @keyframes scrollDownAnim { 0% { transform: translateY(-100%); } 100% { transform: translateY(350%); } }
 
         .section { padding: 60px 20px; background: #fff; border-bottom: 1px solid #f0f0f0; }
         .bg-light { background-color: #f9fafb; }
