@@ -166,6 +166,23 @@
         .feature-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--text-dark); }
         .feature-desc { font-size: 13px; line-height: 1.7; color: #555; }
 
+/* --- カテゴリ・利用者の声用CSS --- */
+        .category-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .category-card {
+            background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 20px 10px;
+            text-align: center; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: transform 0.2s;
+        }
+        .category-card:active { transform: scale(0.98); }
+        .category-icon { font-size: 28px; color: var(--plan-yellow); margin-bottom: 8px; }
+        .category-name { font-size: 13px; font-weight: 700; color: var(--text-dark); }
+        
+        .voice-card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .voice-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .voice-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+        .voice-info h4 { font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px; }
+        .voice-info p { font-size: 11px; color: #666; }
+        .voice-text { font-size: 13px; line-height: 1.6; color: #444; }
+
         /* --- 料金プラン用追加CSS --- */
         .plan-section-title { text-align: center; margin-bottom: 12px; }
         .plan-en-title { font-family: var(--font-en); color: var(--plan-yellow); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 4px; }
@@ -376,9 +393,11 @@
         <aside class="desktop-sidebar">
             <nav class="desktop-nav">
                 <ul id="main-nav-ul">
-                    <li class="active"><a href="#about" class="nav-link">RESET BASEとは</a></li>
+<li class="active"><a href="#about" class="nav-link">RESET BASEとは</a></li>
                     <li><a href="#feature" class="nav-link">特徴</a></li>
+                    <li><a href="#category" class="nav-link">提供サービス</a></li>
                     <li><a href="#plan" class="nav-link">料金プラン</a></li>
+                    <li><a href="#voice" class="nav-link">利用者の声</a></li>
                     <li><a href="#faq" class="nav-link">よくあるご質問</a></li>
                     <li><a href="#access" class="nav-link">アクセス</a></li>
                     <li><a href="#contact" class="nav-link">お問い合わせ</a></li>
@@ -403,9 +422,11 @@
                     
                     <div class="mobile-menu" id="js-mobile-menu">
                         <ul class="mobile-nav-list">
-                            <li><a href="#about" class="m-nav-link">RESET BASEとは</a></li>
+<li><a href="#about" class="m-nav-link">RESET BASEとは</a></li>
                             <li><a href="#feature" class="m-nav-link">特徴</a></li>
+                            <li><a href="#category" class="m-nav-link">提供サービス</a></li>
                             <li><a href="#plan" class="m-nav-link">料金プラン</a></li>
+                            <li><a href="#voice" class="m-nav-link">利用者の声</a></li>
                             <li><a href="#faq" class="m-nav-link">よくあるご質問</a></li>
                             <li><a href="#access" class="m-nav-link">アクセス</a></li>
                             <li><a href="#contact" class="m-nav-link">お問い合わせ</a></li>
@@ -494,7 +515,36 @@
                                     <p class="feature-desc">一時的な疲労回復や痛みのケア（マイナスをゼロにする）だけでは終わりません。仕事のパフォーマンス向上や、やりたいことを思い切り楽しめる身体づくり（ゼロからプラスへ）まで、チーム一丸となってあなたの人生に伴走します。</p>
                                 </div>
                             </div>
+</section>
+                        
+                        <section class="section bg-light" id="category" style="background-color: #fff;">
+                            <div class="sec-title-wrap">
+                                <span class="sec-en">Service</span>
+                                <h2 class="sec-jp">提供サービス</h2>
+                            </div>
+                            <p style="font-size: 13px; color: #666; text-align: center; margin-bottom: 24px; line-height: 1.6;">
+                                アイコンをタップすると、<br>詳細なサポート内容をご覧いただけます。
+                            </p>
+                            <div class="category-grid">
+                                <div class="category-card js-cat-modal-btn" data-target="cat-body">
+                                    <div class="category-icon"><i class="fa-solid fa-hands-holding-circle"></i></div>
+                                    <div class="category-name">整体・鍼灸</div>
+                                </div>
+                                <div class="category-card js-cat-modal-btn" data-target="cat-train">
+                                    <div class="category-icon"><i class="fa-solid fa-dumbbell"></i></div>
+                                    <div class="category-name">トレーニング</div>
+                                </div>
+                                <div class="category-card js-cat-modal-btn" data-target="cat-food">
+                                    <div class="category-icon"><i class="fa-solid fa-apple-whole"></i></div>
+                                    <div class="category-name">栄養・食事指導</div>
+                                </div>
+                                <div class="category-card js-cat-modal-btn" data-target="cat-mental">
+                                    <div class="category-icon"><i class="fa-solid fa-brain"></i></div>
+                                    <div class="category-name">メンタル・その他</div>
+                                </div>
+                            </div>
                         </section>
+
                         <section class="section" id="plan">
                             <div class="plan-section-title">
                                 <span class="plan-en-title">Plan</span>
@@ -596,7 +646,37 @@
                             <button id="js-open-compare" class="btn-compare-all">
                                 <i class="fa-solid fa-list"></i> 各プランの詳しい紹介を見る
                             </button>
+</section>
+
+                        <section class="section" id="voice">
+                            <div class="sec-title-wrap">
+                                <span class="sec-en">Voice</span>
+                                <h2 class="sec-jp">利用者の声</h2>
+                            </div>
+                            
+                            <div class="voice-card">
+                                <div class="voice-header">
+                                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80" class="voice-img" alt="">
+                                    <div class="voice-info">
+                                        <h4>30代 女性 / 会社員</h4>
+                                        <p>プレミアムプラン利用</p>
+                                    </div>
+                                </div>
+                                <p class="voice-text">「整体だけでなく、今の自分に必要な栄養指導もポイントで受けられるのが画期的です。専属チームが私の状態を共有してくれているので、毎回一から説明する手間が省けて助かっています。」</p>
+                            </div>
+
+                            <div class="voice-card">
+                                <div class="voice-header">
+                                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=150&q=80" class="voice-img" alt="">
+                                    <div class="voice-info">
+                                        <h4>40代 男性 / 経営者</h4>
+                                        <p>トータルケアVIP利用</p>
+                                    </div>
+                                </div>
+                                <p class="voice-text">「忙しくてお店を探す時間がなかったのですが、RESET BASEなら全て一箇所で完結します。休日の急な不調にも営業時間外で対応していただき、まさに『専属チーム』だと実感しています。」</p>
+                            </div>
                         </section>
+
                         <section class="section bg-light" id="faq">
                             <div class="sec-title-wrap">
                                 <span class="sec-en">Faq</span>
@@ -802,6 +882,19 @@
                 </div>
             </div>
         </main>
+    </div>
+
+<div class="modal-overlay" id="category-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="cat-modal-title">サービス詳細</h3>
+                <button class="modal-close" id="js-close-category">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 24px; overflow-y: auto; background: #fafafa;">
+                <div id="cat-content" style="background: #fff; border: 1px solid #eaeaea; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); font-size: 13px; line-height: 1.6; color: #444;">
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="modal-overlay" id="compare-modal">
@@ -1035,6 +1128,39 @@
             window.addEventListener('resize', () => {
                 if (isMobile()) { document.querySelectorAll('.expert').forEach(exp => exp.classList.remove('active', 'out')); }
             });
+
+// --- カテゴリモーダル制御ロジック ---
+            const catModalBtns = document.querySelectorAll('.js-cat-modal-btn');
+            const catModal = document.getElementById('category-modal');
+            const btnCloseCat = document.getElementById('js-close-category');
+            const catTitle = document.getElementById('cat-modal-title');
+            const catContent = document.getElementById('cat-content');
+
+            const catData = {
+                'cat-body': { title: '整体・鍼灸', text: '国家資格保有者による本格的な施術です。慢性的な肩こりや腰痛の改善、姿勢矯正から、鍼灸を用いた自律神経の調整まで、あなたの身体の状態に合わせたアプローチを行います。' },
+                'cat-train': { title: 'トレーニング', text: '元プロアスリートや専門トレーナーが、筋力アップ、ダイエット、スポーツのパフォーマンス向上など、目的に応じたパーソナルトレーニングを提供します。' },
+                'cat-food': { title: '栄養・食事指導', text: '管理栄養士があなたのライフスタイルに合わせた食事プランを提案します。LINEでの毎日の食事アドバイスや、サプリメントの選び方までトータルでサポートします。' },
+                'cat-mental': { title: 'メンタル・その他', text: 'ボイストレーニングによる表現力アップや、メンタルコーチによるストレスケアなど、身体だけでなく心とスキルの向上もサポートする多彩なメニューを用意しています。' }
+            };
+
+            catModalBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = btn.getAttribute('data-target');
+                    catTitle.textContent = catData[target].title;
+                    catContent.innerHTML = catData[target].text;
+                    catModal.classList.add('show');
+                });
+            });
+
+            if(btnCloseCat) {
+                btnCloseCat.addEventListener('click', () => catModal.classList.remove('show'));
+            }
+            if(catModal) {
+                catModal.addEventListener('click', (e) => {
+                    if(e.target === catModal) catModal.classList.remove('show');
+                });
+            }
 
             // --- モーダル制御ロジック（全詳細ボタン・一括ボタン兼用） ---
             const modalOpenBtns = document.querySelectorAll('.js-modal-open-btn');
